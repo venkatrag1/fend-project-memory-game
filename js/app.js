@@ -20,7 +20,8 @@ function doOnce() {
  */
 function initGame() {
     deck.innerHTML = '';
-    for (var card of cards) {
+    cards = shuffle(cards);
+    for (let card of cards) {
         const cardli = document.createElement('li');
         cardli.classList.add('card');
         cardli.classList.add('open');
