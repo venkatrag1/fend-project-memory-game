@@ -1,8 +1,14 @@
 /*
  * Create a list that holds all of your cards
  */
-let cards = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt',
-            'fa-leaf'];
+const deck = document.querySelector('.deck');
+
+var cards = [];
+
+Array.from(deck.children).forEach(function (card, index) {
+    cards.push(card.firstElementChild.classList[1]);
+});
+
 
 /*
  * Display the cards on the page
@@ -10,10 +16,9 @@ let cards = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt',
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
-function startGame() {
-    const deck = document.querySelector('.deck');
+function initGame() {
     deck.innerHTML = '';
-    for (const card of cards) {
+    for (var card of cards) {
         const cardli = document.createElement('li');
         cardli.classList.add('card');
         cardli.classList.add('open');
@@ -52,4 +57,4 @@ function shuffle(array) {
  */
 
 
-startGame();
+initGame();
