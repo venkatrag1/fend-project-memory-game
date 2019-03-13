@@ -5,10 +5,12 @@ const deck = document.querySelector('.deck');
 
 var cards = [];
 
-Array.from(deck.children).forEach(function (card, index) {
-    cards.push(card.firstElementChild.classList[1]);
-});
-
+function doOnce() {
+    Array.from(deck.children).forEach(function (card, index) {
+        cards.push(card.firstElementChild.classList[1]);
+    });
+    initGame();
+}
 
 /*
  * Display the cards on the page
@@ -57,4 +59,5 @@ function shuffle(array) {
  */
 
 
+doOnce();
 initGame();
