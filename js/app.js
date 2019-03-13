@@ -3,14 +3,8 @@
  */
 const deck = document.querySelector('.deck');
 
-var cards = [];
+let cards = [];
 
-function doOnce() {
-    Array.from(deck.children).forEach(function (card, index) {
-        cards.push(card.firstElementChild.classList[1]);
-    });
-    initGame();
-}
 
 /*
  * Display the cards on the page
@@ -47,6 +41,15 @@ function shuffle(array) {
     return array;
 }
 
+function selectCard(evt) {
+    //Get to the parent if necessary
+      //Make sure li can capture
+    // if not already open then add open and push to list
+    // check for match
+    if (evt.target.nodeName == "LI") {
+        console.log(evt.target);
+    }
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -58,7 +61,13 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+function doOnce() {
+    Array.from(deck.children).forEach(function (card, index) {
+        cards.push(card.firstElementChild.classList[1]);
+    });
+    initGame();
+    deck.addEventListener('click', selectCard);
+}
 
 
 doOnce();
-initGame();
