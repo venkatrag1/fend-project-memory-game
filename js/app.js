@@ -18,8 +18,6 @@ function initGame() {
     for (let card of cards) {
         const cardli = document.createElement('li');
         cardli.classList.add('card');
-        cardli.classList.add('open');
-        cardli.classList.add('show');
         cardli.innerHTML = `<i class="fa ${card}"></i>`;
         deck.appendChild(cardli);
     }
@@ -47,7 +45,9 @@ function selectCard(evt) {
     // if not already open then add open and push to list
     // check for match
     if (evt.target.nodeName == "LI") {
-        console.log(evt.target);
+        const cardli = evt.target;
+        cardli.classList.toggle('open');
+        cardli.classList.toggle('show');
     }
 }
 
