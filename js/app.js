@@ -4,6 +4,8 @@
 const deck = document.querySelector('.deck');
 
 let cards = [];
+let matchedCount = 0;
+let openedCards = [];
 
 
 /*
@@ -39,16 +41,39 @@ function shuffle(array) {
     return array;
 }
 
+
 function selectCard(evt) {
     //Get to the parent if necessary
       //Make sure li can capture
     // if not already open then add open and push to list
     // check for match
-    if (evt.target.nodeName == "LI") {
-        const cardli = evt.target;
-        cardli.classList.toggle('open');
-        cardli.classList.toggle('show');
+    if (evt.target.nodeName === "LI") {
+        const card = evt.target;
+
+        card.classList.toggle('open');
+        card.classList.toggle('show');
+        checkForMatch(card);
     }
+}
+
+function checkForMatch(card) {
+    if (openedCards.length === 0) {
+        openedCards.push(card);
+    } else if (openedCards[0] !== card) {
+        if (cardSymbol(openedCards[0]) === cardSymbol(card)) {
+            openedCards.push(card);
+            updateMatch();
+        }
+    }
+}
+
+
+function cardSymbol(card) {
+    return card.firstElementChild.classList[1];
+}
+
+function updateMatch() {
+
 }
 
 /*
@@ -63,7 +88,7 @@ function selectCard(evt) {
  */
 function doOnce() {
     Array.from(deck.children).forEach(function (card, index) {
-        cards.push(card.firstElementChild.classList[1]);
+        cards.push(cardSymbol(card));
     });
     initGame();
     deck.addEventListener('click', selectCard);
