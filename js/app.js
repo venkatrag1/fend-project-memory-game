@@ -69,7 +69,10 @@ function checkForMatch(card) {
         if (cardSymbol(openedCards[0]) === cardSymbol(openedCards[1])) {
             setTimeout(matchUpdate, 500);
         } else {
-            setTimeout(mismatchUpdate, 500);
+            for (let card of openedCards) {
+                card.classList.add('animated', 'wobble', 'mismatch');
+            }
+            setTimeout(mismatchUpdate, 1000);
         }
     }
 }
@@ -93,6 +96,7 @@ function matchUpdate() {
 function mismatchUpdate() {
     //Animate
     for (let card of openedCards) {
+        card.classList.remove('mismatch', 'animated', 'wobble');
         card.classList.remove('open', 'show');
     }
     openedCards = [];
