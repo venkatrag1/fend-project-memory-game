@@ -62,8 +62,7 @@ function checkForMatch(card) {
         //Won't run until openedCard list has been reset
         return;
     }
-    card.classList.add('open');
-    card.classList.add('show');
+    card.classList.add('open', 'show');
     openedCards.push(card);
     movesUpdate();
     if (openedCards.length === 2) {
@@ -86,7 +85,7 @@ function cardSymbol(card) {
 function matchUpdate() {
     //Animate
     for (let card of openedCards) {
-        card.classList.add('match');
+        card.classList.add('match', 'animated', 'rubberBand');
     }
     openedCards = [];
 }
@@ -94,8 +93,7 @@ function matchUpdate() {
 function mismatchUpdate() {
     //Animate
     for (let card of openedCards) {
-        card.classList.remove('open');
-        card.classList.remove('show');
+        card.classList.remove('open', 'show');
     }
     openedCards = [];
 }
