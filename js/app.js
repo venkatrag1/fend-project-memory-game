@@ -49,31 +49,55 @@ function selectCard(evt) {
     // check for match
     if (evt.target.nodeName === "LI") {
         const card = evt.target;
-
-        card.classList.toggle('open');
-        card.classList.toggle('show');
-        checkForMatch(card);
-    }
-}
-
-function checkForMatch(card) {
-    if (openedCards.length === 0) {
-        openedCards.push(card);
-    } else if (openedCards[0] !== card) {
-        if (cardSymbol(openedCards[0]) === cardSymbol(card)) {
-            openedCards.push(card);
-            updateMatch();
+        //Send for match only if its a not-opened card
+        if (!card.classList.contains('open') ||
+            !card.classList.contains('show')) {
+            checkForMatch(card);
         }
     }
 }
 
+function checkForMatch(card) {
+    if (openedCards.length > 1) {
+        //Won't run until openedCard list has been reset
+        return;
+    }
+    card.classList.add('open');
+    card.classList.add('show');
+    openedCards.push(card);
+    movesUpdate();
+    if (openedCards.length === 2) {
+        if (cardSymbol(openedCards[0]) === cardSymbol(openedCards[1])) {
+            setTimeout(matchUpdate, 500);
+        } else {
+            setTimeout(mismatchUpdate, 500);
+        }
+    }
+}
+
+function movesUpdate() {
+
+}
 
 function cardSymbol(card) {
     return card.firstElementChild.classList[1];
 }
 
-function updateMatch() {
+function matchUpdate() {
+    //Animate
+    for (let card of openedCards) {
+        card.classList.add('match');
+    }
+    openedCards = [];
+}
 
+function mismatchUpdate() {
+    //Animate
+    for (let card of openedCards) {
+        card.classList.remove('open');
+        card.classList.remove('show');
+    }
+    openedCards = [];
 }
 
 /*
