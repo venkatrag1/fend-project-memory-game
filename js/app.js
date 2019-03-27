@@ -1,14 +1,4 @@
 /*
- * Create a list that holds all of your cards
- */
-const deck = document.querySelector('.deck');
-
-let cards = [];
-let matchedCount = 0;
-let openedCards = [];
-
-
-/*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
@@ -58,18 +48,18 @@ function selectCard(evt) {
 }
 
 function checkForMatch(card) {
-    if (openedCards.length > 1) {
+    if (gameState.openedCards.length > 1) {
         //Won't run until openedCard list has been reset
         return;
     }
     card.classList.add('open', 'show');
-    openedCards.push(card);
+    gameState.openedCards.push(card);
     movesUpdate();
-    if (openedCards.length === 2) {
-        if (cardSymbol(openedCards[0]) === cardSymbol(openedCards[1])) {
-            setTimeout(matchUpdate, 500);
+    if (gameState.openedCards.length === 2) {
+        if (cardSymbol(gameState.openedCards[0]) === cardSymbol(gameState.openedCards[1])) {
+            matchUpdate();
         } else {
-            for (let card of openedCards) {
+            for (let card of gameState.openedCards) {
                 card.classList.add('animated', 'wobble', 'mismatch');
             }
             setTimeout(mismatchUpdate, 1000);
@@ -78,6 +68,11 @@ function checkForMatch(card) {
 }
 
 function movesUpdate() {
+    gameState.moveCount += 1;
+    moves.innerText = gameState.moveCount;
+    // if (moveCount === 20) {
+    //
+    // }
 
 }
 
@@ -87,19 +82,27 @@ function cardSymbol(card) {
 
 function matchUpdate() {
     //Animate
-    for (let card of openedCards) {
+    for (let card of gameState.openedCards) {
         card.classList.add('match', 'animated', 'rubberBand');
     }
-    openedCards = [];
+    gameState.openedCards = [];
+    gameState.matchedCount += 2;
+    if (gameState.matchedCount === cards.length) {
+        endGame();
+    }
+}
+
+function endGame() {
+
 }
 
 function mismatchUpdate() {
     //Animate
-    for (let card of openedCards) {
+    for (let card of gameState.openedCards) {
         card.classList.remove('mismatch', 'animated', 'wobble');
         card.classList.remove('open', 'show');
     }
-    openedCards = [];
+    gameState.openedCards = [];
 }
 
 /*
