@@ -4,7 +4,17 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
+function resetGameState() {
+    gameState.matchedCount = 0;
+    gameState.moveCount = 0;
+    gameState.openedCards = [];
+}
+
+
 function initGame() {
+    resetGameState();
+    // Reset deck
     deck.innerHTML = '';
     cards = shuffle(cards);
     for (let card of cards) {
@@ -13,8 +23,56 @@ function initGame() {
         cardli.innerHTML = `<i class="fa ${card}"></i>`;
         deck.appendChild(cardli);
     }
+    // Reset score-panel
+    updateScorePanel();
 }
 
+function updateScorePanel() {
+    moves.innerText = gameState.moveCount;
+    if (gameState.moveCount === 0) {
+        setStars(3);
+    } else if (gameState.moveCount === 1) {
+        startTimer();
+    } else if (gameState.moveCount === 20) {
+        setStars(2);
+    } else if (gameState.moveCount === 30) {
+        setStars(1);
+    }
+}
+
+function setStars(count) {
+    if (count > STARCOUNT) {
+        console.error("Star count cannot exceed 3");
+    }
+    stars.innerHTML = '';
+    for (let i=0; i < count; i++) {
+        stars.insertAdjacentHTML('beforeend', '<li><i class="fa fa-star"></i></li>');
+    }
+    for (let i=count; i < STARCOUNT; i++) {
+        stars.insertAdjacentHTML('beforeend', '<li><i class="fa fa-star-o"></i></li>');
+    }
+}
+
+function startTimer() {
+    gameState.startTime = new Date();
+    gameState.timer = setInterval(setTimer, 1000);
+}
+
+function stopTimer() {
+    clearInterval(gameState.timer);
+}
+
+function setTimer() {
+    gameState.endTime = new Date();
+    timer.innerText = getTimeElapsedString();
+}
+
+function getTimeElapsedString() {
+    const seconds = (gameState.endTime - gameState.startTime) / 1000;
+    let date = new Date(null);
+    date.setSeconds(seconds); // specify value for SECONDS here
+    return date.toISOString().substr(11, 8);
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -27,7 +85,6 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
 
@@ -70,9 +127,7 @@ function checkForMatch(card) {
 function movesUpdate() {
     gameState.moveCount += 1;
     moves.innerText = gameState.moveCount;
-    // if (moveCount === 20) {
-    //
-    // }
+    updateScorePanel();
 
 }
 
