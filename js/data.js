@@ -8,6 +8,7 @@ const scorePanel = document.querySelector('.score-panel');
 const stars = scorePanel.querySelector('.stars');
 const moves = scorePanel.querySelector('.moves');
 const timer = scorePanel.querySelector('.timer');
+const restart = scorePanel.querySelector('.restart');
 
 /*
  * Create a list that holds all of your cards

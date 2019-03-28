@@ -6,14 +6,20 @@
  */
 
 function resetGameState() {
+    const date = new Date();
+    gameState.startTime = date;
+    gameState.endTime = date;
+    gameState.timer = null;
     gameState.matchedCount = 0;
     gameState.moveCount = 0;
     gameState.openedCards = [];
+    deck.addEventListener('click', selectCard);
 }
 
 
 function initGame() {
     resetGameState();
+    // check and add if not present - deck.addEventListener('click', selectCard); - cos reset in middle of game won't remove- endgame may removebased on cancel
     // Reset deck
     deck.innerHTML = '';
     cards = shuffle(cards);
@@ -174,8 +180,9 @@ function doOnce() {
     Array.from(deck.children).forEach(function (card, index) {
         cards.push(cardSymbol(card));
     });
+    restart.addEventListener('click', initGame);
     initGame();
-    deck.addEventListener('click', selectCard);
+    //Over here just set reset handler
 }
 
 
