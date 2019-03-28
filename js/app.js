@@ -13,7 +13,10 @@ function resetGameState() {
     gameState.matchedCount = 0;
     gameState.moveCount = 0;
     gameState.openedCards = [];
-    deck.addEventListener('click', selectCard);
+    if (gameState.registeredDeckHandler === false) {
+        deck.addEventListener('click', selectCard);
+        gameState.registeredDeckHandler = true;
+    }
 }
 
 
@@ -154,7 +157,12 @@ function matchUpdate() {
 }
 
 function endGame() {
-
+    stopTimer();
+    // Pop up and then deregister if needed
+    if (gameState.registeredDeckHandler) {
+        deck.removeEventListener('click', selectCard);
+        gameState.registeredDeckHandler = false;
+    }
 }
 
 function mismatchUpdate() {
@@ -182,7 +190,6 @@ function doOnce() {
     });
     restart.addEventListener('click', initGame);
     initGame();
-    //Over here just set reset handler
 }
 
 

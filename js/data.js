@@ -22,7 +22,8 @@ let gameState = {
     timer: null,
     matchedCount: 0,
     moveCount: 0,
-    openedCards: []
+    openedCards: [],
+    registeredDeckHandler: false
 };
 
 
