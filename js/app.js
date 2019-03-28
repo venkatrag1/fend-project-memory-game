@@ -44,7 +44,7 @@ function updateScorePanel() {
         startTimer();
     } else if (gameState.moveCount === 20) {
         setStars(2);
-    } else if (gameState.moveCount === 30) {
+    } else if (gameState.moveCount === 40) {
         setStars(1);
     }
 }
