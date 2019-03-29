@@ -40,6 +40,7 @@ function updateScorePanel() {
     moves.innerText = gameState.moveCount;
     if (gameState.moveCount === 0) {
         setStars(3);
+        setTimer();
     } else if (gameState.moveCount === 1) {
         startTimer();
     } else if (gameState.moveCount === 20) {
@@ -188,8 +189,48 @@ function doOnce() {
     Array.from(deck.children).forEach(function (card, index) {
         cards.push(cardSymbol(card));
     });
-    restart.addEventListener('click', initGame);
+    initModal();
+    restart.addEventListener('click', openModal);
     initGame();
+}
+
+function initModal() {
+    modal = new tingle.modal({
+    footer: true,
+    stickyFooter: false,
+    closeMethods: ['overlay', 'button', 'escape'],
+    closeLabel: "Close",
+    cssClass: ['custom-class-1', 'custom-class-2'],
+    onOpen: function() {
+        console.log('modal open');
+    },
+    onClose: function() {
+        console.log('modal closed');
+    },
+    beforeClose: function() {
+        return true;
+    }
+    });
+// set content
+    modal.setContent('<h1>here\'s some content</h1>');
+
+    // add a button
+    modal.addFooterBtn('Close', 'tingle-btn tingle-btn--default', function() {
+        // here goes some logic
+        modal.close();
+    });
+
+        // add a button
+    modal.addFooterBtn('Play again', 'tingle-btn tingle-btn--primary', function() {
+        // here goes some logic
+        initGame();
+        modal.close();
+    });
+
+}
+
+function openModal() {
+    modal.open();
 }
 
 
