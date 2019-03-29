@@ -3,18 +3,26 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [Contributing](#contributing)
+* [Dependencies](#dependencies)
 
 ## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+Open index.html from top level directory.
 
-To get started, open `js/app.js` and start building out the app's functionality
+The goal of the game is to match all pairs of identical cards in consecutive opens.
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+The timer will start when the first card is opened. If the next card doesn't match
+currently opened cards, both cards will close.
 
-## Contributing
+To re-start the game at any time, hit the reset button.
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+If you complete opening all cards within 20 moves, you will get 3 stars. If you
+take between 21 to 40 moves, you will get 2 stars and for move count greater than 
+40 you will get one star.
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+## Dependencies
+
+The project makes use of several css frameworks and js libraries, such as 
+font-awesome, tingle, animate.css all of which are either packaged into 
+the appropriate assets folder or referenced in index.html from CDN.
+
