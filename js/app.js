@@ -12,6 +12,7 @@ function resetGameState() {
     gameState.timer = null;
     gameState.matchedCount = 0;
     gameState.moveCount = 0;
+    gameState.starCount = 3;
     gameState.openedCards = [];
     if (gameState.registeredDeckHandler === false) {
         deck.addEventListener('click', selectCard);
@@ -51,14 +52,15 @@ function updateScorePanel() {
 }
 
 function setStars(count) {
-    if (count > STARCOUNT) {
+    if (count > MAXSTARCOUNT) {
         console.error("Star count cannot exceed 3");
     }
+    gameState.starCount = count;
     stars.innerHTML = '';
     for (let i=0; i < count; i++) {
         stars.insertAdjacentHTML('beforeend', '<li><i class="fa fa-star"></i></li>');
     }
-    for (let i=count; i < STARCOUNT; i++) {
+    for (let i=count; i < MAXSTARCOUNT; i++) {
         stars.insertAdjacentHTML('beforeend', '<li><i class="fa fa-star-o"></i></li>');
     }
 }
@@ -159,11 +161,11 @@ function matchUpdate() {
 
 function endGame() {
     stopTimer();
-    // Pop up and then deregister if needed
     if (gameState.registeredDeckHandler) {
         deck.removeEventListener('click', selectCard);
         gameState.registeredDeckHandler = false;
     }
+    openModal();
 }
 
 function mismatchUpdate() {
@@ -190,7 +192,7 @@ function doOnce() {
         cards.push(cardSymbol(card));
     });
     initModal();
-    restart.addEventListener('click', openModal);
+    restart.addEventListener('click', initGame);
     initGame();
 }
 
@@ -227,7 +229,7 @@ function initModal() {
 
 function openModal() {
     let winHTML = `<div><h1>Congratulation! You won!</h1>
-                     <h3>Your timing is ${getTimeElapsedString()} and won in ${gameState.moveCount} moves</h3>
+                     <h3>Your timing is ${getTimeElapsedString()} and you won in ${gameState.moveCount} moves. That's ${gameState.starCount} stars!</h3>
                      </div>`;
     modal.setContent(winHTML);
     modal.open();

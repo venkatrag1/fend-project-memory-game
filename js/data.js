@@ -1,6 +1,6 @@
 
 /* Global variables */
-const STARCOUNT = 3;
+const MAXSTARCOUNT = 3;
 
 /* DOM elements */
 const deck = document.querySelector('.deck');
@@ -22,6 +22,7 @@ let gameState = {
     timer: null,
     matchedCount: 0,
     moveCount: 0,
+    starCount: 3,
     openedCards: [],
     registeredDeckHandler: false
 };
