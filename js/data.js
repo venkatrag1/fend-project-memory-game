@@ -1,7 +1,4 @@
 
-/* Global variables */
-const MAXSTARCOUNT = 3;
-
 /* DOM elements */
 const deck = document.querySelector('.deck');
 const scorePanel = document.querySelector('.score-panel');
@@ -10,11 +7,9 @@ const moves = scorePanel.querySelector('.moves');
 const timer = scorePanel.querySelector('.timer');
 const restart = scorePanel.querySelector('.restart');
 var modal = null;
-/*
- * Create a list that holds all of your cards
- */
 
-let cards = [];
+/* Global variables */
+const MAXSTARCOUNT = 3;
 
 let gameState = {
     startTime: new Date(),
@@ -26,5 +21,11 @@ let gameState = {
     openedCards: [],
     registeredDeckHandler: false
 };
+/*
+ * Create a list that holds all of your cards
+ */
+
+let cards = [];
+
 
 

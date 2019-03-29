@@ -1,11 +1,27 @@
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+/* Helper functions */
+
+// Shuffle function from http://stackoverflow.com/a/2450976
+function shuffle(array) {
+    let currentIndex = array.length, temporaryValue, randomIndex;
+
+    while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+    return array;
+}
+
+function cardSymbol(card) {
+    return card.firstElementChild.classList[1];
+}
+
+/* Score-panel functions*/
 
 function resetGameState() {
+    // Reset gameState variables
     const date = new Date();
     gameState.startTime = date;
     gameState.endTime = date;
@@ -14,30 +30,15 @@ function resetGameState() {
     gameState.moveCount = 0;
     gameState.starCount = 3;
     gameState.openedCards = [];
+    // Event handler will be removed every time player wins
     if (gameState.registeredDeckHandler === false) {
         deck.addEventListener('click', selectCard);
         gameState.registeredDeckHandler = true;
     }
 }
 
-
-function initGame() {
-    resetGameState();
-    // check and add if not present - deck.addEventListener('click', selectCard); - cos reset in middle of game won't remove- endgame may removebased on cancel
-    // Reset deck
-    deck.innerHTML = '';
-    cards = shuffle(cards);
-    for (let card of cards) {
-        const cardli = document.createElement('li');
-        cardli.classList.add('card');
-        cardli.innerHTML = `<i class="fa ${card}"></i>`;
-        deck.appendChild(cardli);
-    }
-    // Reset score-panel
-    updateScorePanel();
-}
-
 function updateScorePanel() {
+    // Repaint elements on score panel
     moves.innerText = gameState.moveCount;
     if (gameState.moveCount === 0) {
         setStars(3);
@@ -65,15 +66,7 @@ function setStars(count) {
     }
 }
 
-function startTimer() {
-    gameState.startTime = new Date();
-    gameState.timer = setInterval(setTimer, 1000);
-}
-
-function stopTimer() {
-    clearInterval(gameState.timer);
-}
-
+/* Timer functions */
 function setTimer() {
     gameState.endTime = new Date();
     timer.innerText = getTimeElapsedString();
@@ -86,26 +79,18 @@ function getTimeElapsedString() {
     return date.toISOString().substr(11, 8);
 }
 
-// Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    let currentIndex = array.length, temporaryValue, randomIndex;
-
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-    return array;
+function startTimer() {
+    gameState.startTime = new Date();
+    gameState.timer = setInterval(setTimer, 1000);
 }
 
+function stopTimer() {
+    clearInterval(gameState.timer);
+}
 
+ /* Card click event handling */
 function selectCard(evt) {
-    //Get to the parent if necessary
-      //Make sure li can capture
-    // if not already open then add open and push to list
-    // check for match
+    //
     if (evt.target.nodeName === "LI") {
         const card = evt.target;
         //Send for match only if its a not-opened card
@@ -125,12 +110,14 @@ function checkForMatch(card) {
     gameState.openedCards.push(card);
     movesUpdate();
     if (gameState.openedCards.length === 2) {
+        // once you have two cards check for match and invoke matchUpdate or mismatchUpdate
         if (cardSymbol(gameState.openedCards[0]) === cardSymbol(gameState.openedCards[1])) {
             matchUpdate();
         } else {
             for (let card of gameState.openedCards) {
                 card.classList.add('animated', 'wobble', 'mismatch');
             }
+            /* Remove animation after 1 sec */
             setTimeout(mismatchUpdate, 1000);
         }
     }
@@ -143,38 +130,97 @@ function movesUpdate() {
 
 }
 
-function cardSymbol(card) {
-    return card.firstElementChild.classList[1];
-}
-
 function matchUpdate() {
-    //Animate
+    //Animate with rubberband
     for (let card of gameState.openedCards) {
         card.classList.add('match', 'animated', 'rubberBand');
     }
     gameState.openedCards = [];
+    // Increment match count and check for all match
     gameState.matchedCount += 2;
     if (gameState.matchedCount === cards.length) {
         endGame();
     }
 }
 
-function endGame() {
-    stopTimer();
-    if (gameState.registeredDeckHandler) {
-        deck.removeEventListener('click', selectCard);
-        gameState.registeredDeckHandler = false;
-    }
-    openModal();
-}
-
 function mismatchUpdate() {
-    //Animate
+    //Animate with wobble and paint red
     for (let card of gameState.openedCards) {
         card.classList.remove('mismatch', 'animated', 'wobble');
         card.classList.remove('open', 'show');
     }
     gameState.openedCards = [];
+}
+
+/* Winning Modal */
+function initModal() {
+    modal = new tingle.modal({
+    footer: true,
+    stickyFooter: false,
+    closeMethods: ['overlay', 'button', 'escape'],
+    closeLabel: "Close",
+    cssClass: ['custom-class-1', 'custom-class-2'],
+    onOpen: function() {
+    },
+    onClose: function() {
+    },
+    beforeClose: function() {
+        return true;
+    }
+    });
+
+    // add close button
+    modal.addFooterBtn('Close', 'tingle-btn tingle-btn--default', function() {
+        modal.close();
+    });
+
+        // add play again button
+    modal.addFooterBtn('Play again', 'tingle-btn tingle-btn--primary', function() {
+        // restart game and close modal
+        initGame();
+        modal.close();
+    });
+
+}
+
+function openModal() {
+    // Template literal to fill with actual win numbers
+    let winHTML = `<div><h1>Congratulation! You won!</h1>
+                     <h3>Your timing is ${getTimeElapsedString()} and you won in ${gameState.moveCount} moves. That's ${gameState.starCount} stars!</h3>
+                     </div>`;
+    modal.setContent(winHTML);
+    modal.open();
+}
+
+/* (Re)start game */
+
+function initGame() {
+    stopTimer();
+    resetGameState();
+    // Reset deck
+    deck.innerHTML = '';
+    cards = shuffle(cards);
+    for (let card of cards) {
+        // Re-insert cards into deck
+        const cardli = document.createElement('li');
+        cardli.classList.add('card');
+        cardli.innerHTML = `<i class="fa ${card}"></i>`;
+        deck.appendChild(cardli);
+    }
+    // Repaint score-panel with new gameState
+    updateScorePanel();
+}
+
+/* End game */
+
+function endGame() {
+    stopTimer();
+    if (gameState.registeredDeckHandler) {
+        /* Prevent clicks from having any effect until restart */
+        deck.removeEventListener('click', selectCard);
+        gameState.registeredDeckHandler = false;
+    }
+    openModal();
 }
 
 /*
@@ -195,45 +241,5 @@ function doOnce() {
     restart.addEventListener('click', initGame);
     initGame();
 }
-
-function initModal() {
-    modal = new tingle.modal({
-    footer: true,
-    stickyFooter: false,
-    closeMethods: ['overlay', 'button', 'escape'],
-    closeLabel: "Close",
-    cssClass: ['custom-class-1', 'custom-class-2'],
-    onOpen: function() {
-    },
-    onClose: function() {
-    },
-    beforeClose: function() {
-        return true;
-    }
-    });
-
-    // add a button
-    modal.addFooterBtn('Close', 'tingle-btn tingle-btn--default', function() {
-        // here goes some logic
-        modal.close();
-    });
-
-        // add a button
-    modal.addFooterBtn('Play again', 'tingle-btn tingle-btn--primary', function() {
-        // here goes some logic
-        initGame();
-        modal.close();
-    });
-
-}
-
-function openModal() {
-    let winHTML = `<div><h1>Congratulation! You won!</h1>
-                     <h3>Your timing is ${getTimeElapsedString()} and you won in ${gameState.moveCount} moves. That's ${gameState.starCount} stars!</h3>
-                     </div>`;
-    modal.setContent(winHTML);
-    modal.open();
-}
-
 
 doOnce();
