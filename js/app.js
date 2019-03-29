@@ -202,17 +202,13 @@ function initModal() {
     closeLabel: "Close",
     cssClass: ['custom-class-1', 'custom-class-2'],
     onOpen: function() {
-        console.log('modal open');
     },
     onClose: function() {
-        console.log('modal closed');
     },
     beforeClose: function() {
         return true;
     }
     });
-// set content
-    modal.setContent('<h1>here\'s some content</h1>');
 
     // add a button
     modal.addFooterBtn('Close', 'tingle-btn tingle-btn--default', function() {
@@ -230,6 +226,10 @@ function initModal() {
 }
 
 function openModal() {
+    let winHTML = `<div><h1>Congratulation! You won!</h1>
+                     <h3>Your timing is ${getTimeElapsedString()} and won in ${gameState.moveCount} moves</h3>
+                     </div>`;
+    modal.setContent(winHTML);
     modal.open();
 }
 
