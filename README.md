@@ -20,6 +20,8 @@ If you complete opening all cards within 20 moves, you will get 3 stars. If you
 take between 21 to 40 moves, you will get 2 stars and for move count greater than 
 40 you will get one star.
 
+A live version of this project can be found [here](https://venkatrag1.github.io/fend-project-memory-game/).
+
 ## Dependencies
 
 The project makes use of several css frameworks and js libraries, such as 
